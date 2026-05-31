@@ -5,12 +5,19 @@
 cxx.std = latest
 
 using cxx
+using c
 
-hxx{*}: extension = hxx
-ixx{*}: extension = ixx
-txx{*}: extension = txx
-cxx{*}: extension = cxx
+hxx{*}: extension = hpp
+ixx{*}: extension = ipp
+txx{*}: extension = tpp
+cxx{*}: extension = cpp
+mxx{*}: extension = cppm
+
+h{*}: extension = h
+c{*}: extension = c
 
 # The test target for cross-testing (running tests under Wine, etc).
 #
 test.target = $cxx.target
+
+config [bool] config.libassert.std_format ?= true
