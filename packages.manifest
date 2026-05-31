@@ -1,2 +1,5 @@
 : 1
 location: libassert/
+
+:
+location: libassert-tests/

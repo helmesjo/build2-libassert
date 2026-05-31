@@ -1,0 +1,17 @@
+: 1
+name: libassert-tests
+version: 2.2.1-a.0.z
+type: exe
+language: c++
+summary: The most over-engineered C++ assertion library ; tests
+license: MIT ; MIT License.
+description-file: README.md
+package-description-file: PACKAGE-README.md
+changes-file: CHANGELOG.md
+url: https://github.com/jeremy-rifkin/libassert
+package-url: https://github.com/build2-packaging/libassert
+package-email: packaging@build2.org ; Mailing list.
+depends: * build2 >= 0.18.0
+depends: * bpkg >= 0.18.0
+depends: gtest ^ 1.11.0+1
+depends: gmock ^ 1.11.0+1
