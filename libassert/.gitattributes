@@ -1,0 +1,2 @@
+include/libassert symlink=dir
+src/libassert     symlink=dir
