@@ -16,3 +16,13 @@ depends: * bpkg >= 0.18.0
 depends: fmt ^ 10.2.1
 depends: gtest ^ 1.11.0+1
 depends: gmock ^ 1.11.0+1
+depends:
+\
+libassert == $
+{
+  require
+  {
+    config.libassert.build_testing=true
+  }
+}
+\

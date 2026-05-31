@@ -20,4 +20,8 @@ c{*}: extension = c
 #
 test.target = $cxx.target
 
-config [bool] config.libassert.std_format ?= true
+config [bool] config.libassert.std_format    ?= true
+config [bool] config.libassert.build_testing ?= false
+
+if($build.mode != 'skeleton' && $config.libassert.build_testing)
+  info "configured for testing \(config.libassert.build_testing=true\)"

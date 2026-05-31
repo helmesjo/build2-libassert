@@ -26,7 +26,8 @@ src_pfx_src = [dir_path] $src_root/src/libassert
 
 cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
                 "-I$out_pfx_inc" "-I$src_pfx_inc" \
-                (!$config.libassert.std_format ? -DLIBASSERT_NO_STD_FORMAT:)
+                (!$config.libassert.std_format   ? -DLIBASSERT_NO_STD_FORMAT:) \
+                ($config.libassert.build_testing ? -DLIBASSERT_BUILD_TESTING:)
 
 obja{**}: cxx.poptions += -DLIBASSERT_STATIC_DEFINE
 objs{**}: cxx.poptions += -Dlibassert_lib_EXPORTS
@@ -36,7 +37,8 @@ objs{**}: cxx.poptions += -Dlibassert_lib_EXPORTS
 lib{assert}:
 {
   cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc" \
-                        (!$config.libassert.std_format ? -DLIBASSERT_NO_STD_FORMAT:)
+                        (!$config.libassert.std_format ? -DLIBASSERT_NO_STD_FORMAT:) \
+                        ($config.libassert.build_testing ? -DLIBASSERT_BUILD_TESTING "-I$src_pfx_src" :)
   cxx.export.libs = $intf_libs
 }
 
@@ -51,13 +53,23 @@ if $version.pre_release
 else
   lib{assert}: bin.lib.version = "-$version.major.$version.minor"
 
-# Don't install private headers.
+# Don't install private headers (except for testing).
 #
-{hxx ixx txx}{*}: install = false
+libassert/{hxx ixx txx}{*}:
+{
+  install = ($config.libassert.build_testing ? include/libassert/internal/: false)
+  install.subdirs = true
+}
+
+# Make sure private headers installed into libassert/internal/ can
+# also be included without the directory prefixes (for tests).
+#
+lib{assert}: cxx.pkgconfig.include = include/ \
+             ($config.libassert.build_testing ? include/libassert/internal/ :)
 
 # Install module interfaces.
 #
-{mxx}{*}:
+mxx{*}:
 {
   install         = include/libassert/
   install.subdirs = false

@@ -4,20 +4,19 @@ import libs = \
   gtest%liba{gtest_main} \
   gmock%liba{gmock}
 
-# Tests that defines their own main()
-#
-# with_main = constexpr_contexts.cpp \
-#             disambiguation.cpp \
-#             lexer.cpp \
-#             literals.cpp \
-#             test_public_utilities.cpp \
-#             test_type_prettier.cpp \
-#             type_handling.cpp
+# Tests with own main() (no gtest_main):
+# - constexpr_contexts
+# - disambiguation
+# - fmt-test (needs -DLIBASSERT_USE_FMT)
+# - literals
+# - test_public_utilities
+# - test_type_prettier
+# - type_handling
 
 for t : cxx{* -std_format* -catch2-test \
               -constexpr_contexts \
               -disambiguation \
-              -lexer \
+              -fmt-test \
               -literals \
               -test_public_utilities \
               -test_type_prettier \
@@ -28,13 +27,17 @@ for t : cxx{* -std_format* -catch2-test \
   ./: exe{test-$n}: $t hxx{**} $libs
 }
 
+./: exe{test-fmt-test}: cxx{fmt-test} hxx{**} $libs
+obj{fmt-test}: cxx.poptions += -DLIBASSERT_USE_FMT
+
 # ./: exe{test-std_format20}: cxx{std_format20} hxx{**} $libs
 # exe{test-std_format23}: cxx{std_format23} hxx{**} $libs
 # ./: exe{test-std_format23}: include = ($cxx.std >= 23)
 
 # Build options.
 #
-cxx.poptions =+ "-I$src_base/libassert-src" -DLIBASSERT_BUILD_TESTING
-
 if ($cxx.target.system == 'win32-msvc')
+{
   cxx.coptions += /Zc:preprocessor
+  obj{assertion_tests}: cxx.coptions += /permissive-
+}
