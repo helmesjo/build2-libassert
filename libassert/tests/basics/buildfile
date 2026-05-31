@@ -1,0 +1,3 @@
+import libs = libassert%lib{assert}
+
+exe{driver}: {hxx ixx txx cxx}{**} $libs testscript{**}
