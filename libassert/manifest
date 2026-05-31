@@ -14,3 +14,4 @@ depends: * build2 >= 0.18.0
 depends: * bpkg >= 0.18.0
 depends: libcpptrace
 depends: fmt ^ 10.2.1 ? (!$config.libassert.std_format)
+tests: libassert-tests == $

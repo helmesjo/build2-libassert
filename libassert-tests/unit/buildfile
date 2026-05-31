@@ -1,6 +1,40 @@
-libs =
-#import libs += libhello%lib{hello}
+import libs = \
+  libassert%lib{assert} \
+  fmt%lib{fmt} \
+  gtest%liba{gtest_main} \
+  gmock%liba{gmock}
 
-exe{libassert-tests}: {hxx ixx txx cxx}{**} $libs testscript
+# Tests that defines their own main()
+#
+# with_main = constexpr_contexts.cpp \
+#             disambiguation.cpp \
+#             lexer.cpp \
+#             literals.cpp \
+#             test_public_utilities.cpp \
+#             test_type_prettier.cpp \
+#             type_handling.cpp
 
-cxx.poptions =+ "-I$out_root" "-I$src_root"
+for t : cxx{* -std_format* -catch2-test \
+              -constexpr_contexts \
+              -disambiguation \
+              -lexer \
+              -literals \
+              -test_public_utilities \
+              -test_type_prettier \
+              -type_handling \
+           }
+{
+  n = $name($t)
+  ./: exe{test-$n}: $t hxx{**} $libs
+}
+
+# ./: exe{test-std_format20}: cxx{std_format20} hxx{**} $libs
+# exe{test-std_format23}: cxx{std_format23} hxx{**} $libs
+# ./: exe{test-std_format23}: include = ($cxx.std >= 23)
+
+# Build options.
+#
+cxx.poptions =+ "-I$src_base/libassert-src" -DLIBASSERT_BUILD_TESTING
+
+if ($cxx.target.system == 'win32-msvc')
+  cxx.coptions += /Zc:preprocessor

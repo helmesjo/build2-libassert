@@ -40,10 +40,7 @@ lib{assert}:
   cxx.export.libs = $intf_libs
 }
 
-liba{assert}:
-{
-  cxx.export.poptions =+ -DLIBASSERT_STATIC_DEFINE
-}
+liba{assert}: cxx.export.poptions =+ -DLIBASSERT_STATIC_DEFINE
 
 # For pre-releases use the complete version to make sure they cannot
 # be used in place of another pre-release or the final version. See
