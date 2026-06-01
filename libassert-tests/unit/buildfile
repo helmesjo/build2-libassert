@@ -14,10 +14,12 @@ import libs = \
 # - type_handling
 
 for t : cxx{* -std_format* -catch2-test \
+              -assertion_tests \
               -constexpr_contexts \
               -disambiguation \
               -fmt-test \
               -literals \
+              -stringify \
               -test_public_utilities \
               -test_type_prettier \
               -type_handling \
@@ -26,6 +28,24 @@ for t : cxx{* -std_format* -catch2-test \
   n = $name($t)
   ./: exe{test-$n}: $t hxx{**} $libs
 }
+
+exe{*}: test.arguments = --gtest_brief=1
+
+# Upstream guard `_WIN32 && !LIBASSERT_IS_GCC` also fires for Clang (not clang-cl), which
+# uses __PRETTY_FUNCTION__ and omits default template args like std::less<int>. Also,
+# GCC 14+ made std::optional a range (P3168), which causes the container path to fire
+# before the optional-specific path in libassert's stringification. Skip until fixed upstream.
+#
+./: exe{test-stringify}: \
+  include = (!($cxx.id == 'clang' && $cxx.target.class == 'windows') && \
+             !($cxx.id == 'gcc' && $cxx.version.major >= 14))
+exe{test-stringify}: cxx{stringify} hxx{**} $libs
+
+# Same P3168 issue as above.
+#
+./: exe{test-assertion_tests}: \
+  include = (!($cxx.id == 'gcc' && $cxx.version.major >= 14))
+exe{test-assertion_tests}: cxx{assertion_tests} hxx{**} $libs
 
 ./: exe{test-fmt-test}: cxx{fmt-test} hxx{**} $libs
 obj{fmt-test}: \
@@ -54,7 +74,7 @@ obj{std_format23}:
 
 # Build options.
 #
-if ($cxx.target.system == 'win32-msvc')
+if ($cxx.class == 'msvc')
 {
   cxx.coptions += /Zc:preprocessor
   obj{assertion_tests}: cxx.coptions += /permissive-

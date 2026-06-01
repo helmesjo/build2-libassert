@@ -1,5 +1,5 @@
 import libs = libassert%lib{assert}
 
-exe{driver}: {hxx ixx txx cxx mxx}{**} $libs testscript{**}
+exe{driver}: {hxx ixx txx cxx mxx}{**} $libs
 
 cxx.poptions += -DLIBASSERT_BUILD_TESTING -DLIBASSERT_LOWERCASE
