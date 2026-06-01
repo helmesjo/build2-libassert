@@ -13,5 +13,5 @@ package-email: packaging@build2.org ; Mailing list.
 depends: * build2 >= 0.18.0
 depends: * bpkg >= 0.18.0
 depends: libcpptrace
-depends: fmt ^ 10.2.1 ? (!$config.libassert.std_format)
+depends: fmt ^ 11.1.4 ? (!$config.libassert.use_fmt)
 tests: libassert-tests == $

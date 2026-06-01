@@ -26,7 +26,8 @@ src_pfx_src = [dir_path] $src_root/src/libassert
 
 cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
                 "-I$out_pfx_inc" "-I$src_pfx_inc" \
-                (!$config.libassert.std_format   ? -DLIBASSERT_NO_STD_FORMAT:) \
+                ($config.libassert.use_fmt       ? -DLIBASSERT_USE_FMT:) \
+                ($config.libassert.no_std_format ? -DLIBASSERT_NO_STD_FORMAT:) \
                 ($config.libassert.build_testing ? -DLIBASSERT_BUILD_TESTING:)
 
 obja{**}: cxx.poptions += -DLIBASSERT_STATIC_DEFINE
@@ -37,7 +38,8 @@ objs{**}: cxx.poptions += -Dlibassert_lib_EXPORTS
 lib{assert}:
 {
   cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc" \
-                        (!$config.libassert.std_format ? -DLIBASSERT_NO_STD_FORMAT:) \
+                        ($config.libassert.use_fmt       ? -DLIBASSERT_USE_FMT:) \
+                        ($config.libassert.no_std_format ? -DLIBASSERT_NO_STD_FORMAT:) \
                         ($config.libassert.build_testing ? -DLIBASSERT_BUILD_TESTING "-I$src_pfx_src" :)
   cxx.export.libs = $intf_libs
 }

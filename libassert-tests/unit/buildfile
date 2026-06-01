@@ -28,11 +28,25 @@ for t : cxx{* -std_format* -catch2-test \
 }
 
 ./: exe{test-fmt-test}: cxx{fmt-test} hxx{**} $libs
-obj{fmt-test}: cxx.poptions += -DLIBASSERT_USE_FMT
+obj{fmt-test}: \
+  cxx.poptions += -DLIBASSERT_USE_FMT
 
-# ./: exe{test-std_format20}: cxx{std_format20} hxx{**} $libs
-# exe{test-std_format23}: cxx{std_format23} hxx{**} $libs
-# ./: exe{test-std_format23}: include = ($cxx.std >= 23)
+# Upstream fmtable formatter uses concrete format_context& which std::formattable rejects on GCC/Clang.
+#
+./: exe{test-std_format20}: include = ($cxx.id == 'msvc')
+exe{test-std_format20}: cxx{std_format20} hxx{**} $libs
+obj{std_format20}:
+{
+  cxx.mode = 20
+  cxx.poptions += -DLIBASSERT_USE_FMT
+}
+
+./: exe{test-std_format23}: cxx{std_format23} hxx{**} $libs
+obj{std_format23}:
+{
+  cxx.mode = 23
+  cxx.poptions += -DLIBASSERT_USE_FMT
+}
 
 # Build options.
 #
