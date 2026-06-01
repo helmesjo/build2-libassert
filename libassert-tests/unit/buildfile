@@ -31,7 +31,8 @@ for t : cxx{* -std_format* -catch2-test \
 obj{fmt-test}: \
   cxx.poptions += -DLIBASSERT_USE_FMT
 
-# Upstream fmtable formatter uses concrete format_context& which std::formattable rejects on GCC/Clang.
+# Upstream fmtable formatter uses concrete format_context&
+# which std::formattable rejects on GCC/Clang.
 #
 ./: exe{test-std_format20}: include = ($cxx.id == 'msvc')
 exe{test-std_format20}: cxx{std_format20} hxx{**} $libs
@@ -41,7 +42,10 @@ obj{std_format20}:
   cxx.poptions += -DLIBASSERT_USE_FMT
 }
 
-./: exe{test-std_format23}: cxx{std_format23} hxx{**} $libs
+# std::formattable not implemented for MSVC.
+#
+./: exe{test-std_format23}: include = ($cxx.id != 'msvc')
+exe{test-std_format23}: cxx{std_format23} hxx{**} $libs
 obj{std_format23}:
 {
   cxx.mode = 23
