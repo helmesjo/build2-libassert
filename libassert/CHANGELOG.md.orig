@@ -218,7 +218,7 @@ Changes since v1:
 **Analysis:**
 - Type prettifying
   - Added normalization for `std::__cxx11::` to to `std::`
-  - Added normalization for msvc ```anonymous namespace'`` to `(anonymous namespace)`
+  - Added normalization for msvc ``​`anonymous namespace'`` to `(anonymous namespace)`
 - Overhauled C++ tokenizer to use a much better implementation
 
 **Bug fixes:**
@@ -258,7 +258,7 @@ Changes:
 - Updated `libassert::stacktrace` to take color scheme and skip parameters
 - Added C++23 specialization for how static assertion information is stored which is hopefully faster for compile times
 - Added `LIBASSERT_PREFIX_ASSERTIONS` option to only add assertion macros with a `LIBASSERT_` prefix
-- Added normalization for msvc ```anonymous namespace'``
+- Added normalization for msvc ``​`anonymous namespace'``
 - Added `LIBASSERT_NO_STRINGIFY_SMART_POINTER_OBJECTS` option
 - Improved how data is stored in `binary_diagnostics_descriptor`, `assert_static_parameters`, and `assertion_info`
 - Simplified up failure handler signature

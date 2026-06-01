@@ -7,7 +7,6 @@ summary: The most over-engineered C++ assertion library ; tests
 license: MIT ; MIT License.
 description-file: README.md
 package-description-file: PACKAGE-README.md
-changes-file: CHANGELOG.md
 url: https://github.com/jeremy-rifkin/libassert
 package-url: https://github.com/build2-packaging/libassert
 package-email: packaging@build2.org ; Mailing list.
