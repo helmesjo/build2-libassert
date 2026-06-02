@@ -1,22 +1,28 @@
-import libs = \
-  libassert%lib{assert} \
+import libassert = libassert%lib{assert}
+
+libs = $libassert
+import libs += \
   gtest%liba{gtest_main} \
   gmock%liba{gmock}
 
-# Tests with own main() (no gtest_main):
-# - constexpr_contexts
-# - disambiguation
-# - fmt-test (needs -DLIBASSERT_USE_FMT)
-# - literals
-# - test_public_utilities
-# - test_type_prettier
-# - type_handling
+# Tests with own main() (no gtest dep):
+#
+for t : cxx{constexpr_contexts    \
+            disambiguation        \
+            literals              \
+            test_public_utilities \
+            test_type_prettier    \
+            type_handling         \
+           }
+{
+  n = $name($t)
+  ./: exe{test-$n}: $t hxx{**} $libassert testscript
+}
 
 for t : cxx{* -std_format* -catch2-test \
               -assertion_tests \
               -constexpr_contexts \
               -disambiguation \
-              -fmt-test \
               -literals \
               -stringify \
               -test_public_utilities \
@@ -25,7 +31,7 @@ for t : cxx{* -std_format* -catch2-test \
            }
 {
   n = $name($t)
-  ./: exe{test-$n}: $t hxx{**} $libs
+  ./: exe{test-$n}: $t hxx{**} $libs testscript
 }
 
 exe{*}: test.arguments = --gtest_brief=1
@@ -38,29 +44,25 @@ exe{*}: test.arguments = --gtest_brief=1
 ./: exe{test-stringify}: \
   include = (!($cxx.id == 'clang' && $cxx.target.class == 'windows') && \
              !($cxx.id == 'gcc' && $cxx.version.major >= 14))
-exe{test-stringify}: cxx{stringify} hxx{**} $libs
+exe{test-stringify}: cxx{stringify} hxx{**} $libs testscript
 
 # Same P3168 issue as above.
 #
 ./: exe{test-assertion_tests}: \
   include = (!($cxx.id == 'gcc' && $cxx.version.major >= 14))
-exe{test-assertion_tests}: cxx{assertion_tests} hxx{**} $libs
-
-# NOTE: 'LIBASSERT_USE_FMT' is exported by libassert if
-# config.libassert.use_fmt=true (enforced in tests manifest).
-./: exe{test-fmt-test}: cxx{fmt-test} hxx{**} $libs
+exe{test-assertion_tests}: cxx{assertion_tests} hxx{**} $libs testscript
 
 # Upstream fmtable formatter uses concrete format_context&
 # which std::formattable rejects on GCC/Clang.
 #
 ./: exe{test-std_format20}: include = ($cxx.id == 'msvc')
-exe{test-std_format20}: cxx{std_format20} hxx{**} $libs
+exe{test-std_format20}: cxx{std_format20} hxx{**} $libs testscript
 obj{std_format20}: cxx.mode = 20
 
 # std::formattable not implemented for MSVC.
 #
 ./: exe{test-std_format23}: include = ($cxx.id != 'msvc')
-exe{test-std_format23}: cxx{std_format23} hxx{**} $libs
+exe{test-std_format23}: cxx{std_format23} hxx{**} $libs testscript
 obj{std_format23}: cxx.mode = 23
 
 # Build options.
