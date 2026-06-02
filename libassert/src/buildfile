@@ -3,6 +3,9 @@ impl_libs = # Implementation dependencies.
 import intf_libs += \
   libcpptrace%lib{cpptrace}
 
+if ($config.libassert.use_fmt)
+  import intf_libs += fmt%lib{fmt}
+
 # Public headers.
 #
 pub = [dir_path] ../include/

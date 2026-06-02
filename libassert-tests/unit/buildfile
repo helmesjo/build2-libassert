@@ -1,6 +1,5 @@
 import libs = \
   libassert%lib{assert} \
-  fmt%lib{fmt} \
   gtest%liba{gtest_main} \
   gmock%liba{gmock}
 
@@ -47,30 +46,22 @@ exe{test-stringify}: cxx{stringify} hxx{**} $libs
   include = (!($cxx.id == 'gcc' && $cxx.version.major >= 14))
 exe{test-assertion_tests}: cxx{assertion_tests} hxx{**} $libs
 
+# NOTE: 'LIBASSERT_USE_FMT' is exported by libassert if
+# config.libassert.use_fmt=true (enforced in tests manifest).
 ./: exe{test-fmt-test}: cxx{fmt-test} hxx{**} $libs
-obj{fmt-test}: \
-  cxx.poptions += -DLIBASSERT_USE_FMT
 
 # Upstream fmtable formatter uses concrete format_context&
 # which std::formattable rejects on GCC/Clang.
 #
 ./: exe{test-std_format20}: include = ($cxx.id == 'msvc')
 exe{test-std_format20}: cxx{std_format20} hxx{**} $libs
-obj{std_format20}:
-{
-  cxx.mode = 20
-  cxx.poptions += -DLIBASSERT_USE_FMT
-}
+obj{std_format20}: cxx.mode = 20
 
 # std::formattable not implemented for MSVC.
 #
 ./: exe{test-std_format23}: include = ($cxx.id != 'msvc')
 exe{test-std_format23}: cxx{std_format23} hxx{**} $libs
-obj{std_format23}:
-{
-  cxx.mode = 23
-  cxx.poptions += -DLIBASSERT_USE_FMT
-}
+obj{std_format23}: cxx.mode = 23
 
 # Build options.
 #

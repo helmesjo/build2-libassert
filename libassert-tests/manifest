@@ -12,7 +12,6 @@ package-url: https://github.com/build2-packaging/libassert
 package-email: packaging@build2.org ; Mailing list.
 depends: * build2 >= 0.18.0
 depends: * bpkg >= 0.18.0
-depends: fmt ^ 11.1.4
 depends: gtest ^ 1.11.0+1
 depends: gmock ^ 1.11.0+1
 depends:
@@ -21,6 +20,7 @@ libassert
 {
   require
   {
+    config.libassert.use_fmt=true
     config.libassert.build_testing=true
   }
 }
