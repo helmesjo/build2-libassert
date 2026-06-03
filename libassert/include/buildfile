@@ -1,6 +1,17 @@
-pub_hdrs = {hxx ixx txx}{**}
+using in
+
+pub_hdrs = libassert/{hxx ixx txx}{** -version} libassert/hxx{version}
 
 ./: $pub_hdrs
+
+[rule_hint=in] \
+libassert/hxx{version}: in{version} $src_root/manifest
+{
+  in.symbol = '@'
+  LIBASSERT_VERSION_MAJOR = $version.major
+  LIBASSERT_VERSION_MINOR = $version.minor
+  LIBASSERT_VERSION_PATCH = $version.patch
+}
 
 # Install recreating subdirectories.
 #
