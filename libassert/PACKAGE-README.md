@@ -38,18 +38,26 @@ The main compiled assertion library. Link against this target to use
 This package provides the following configuration variables:
 
 ```
-[bool] config.libassert.use_fmt       ?= false
-[bool] config.libassert.no_std_format ?= false
-[bool] config.libassert.build_testing ?= false
+[bool] config.libassert.use_fmt        ?= false
+[bool] config.libassert.use_magic_enum ?= false
+[bool] config.libassert.no_std_format  ?= false
+[bool] config.libassert.build_testing  ?= false
 ```
 
-`config.libassert.use_fmt`: enable `{fmt}` integration (`-DLIBASSERT_USE_FMT`).
-When `true`, the `fmt` package dependency becomes active and libassert will use
-`fmt::formatter` specializations for stringification.
+`config.libassert.use_fmt`:
+ - enable [{fmt}](https://github.com/fmtlib/fmt) integration (`-DLIBASSERT_USE_FMT`).
+   When `true`, the `fmt` package dependency becomes active and libassert will
+   use `fmt::formatter` specializations for stringification.
 
-`config.libassert.no_std_format`: disable `std::format` support
-(`-DLIBASSERT_NO_STD_FORMAT`). Set to `true` when the toolchain has a defective or
-missing `<format>` implementation.
+`config.libassert.use_magic_enum`:
+ - enable [magic_enum](https://github.com/Neargye/magic_enum) integration
+   (`-DLIBASSERT_USE_MAGIC_ENUM`). When `true`, the `magic_enum` package
+   dependency becomes active and libassert will use it to stringify enum values.
 
-`config.libassert.build_testing`: expose internal headers required by the
-`libassert-tests` package. Not intended for normal consumers.
+`config.libassert.no_std_format`:
+ - disable `std::format` support (`-DLIBASSERT_NO_STD_FORMAT`). Set to `true`
+   when the toolchain has a defective or missing `<format>` implementation.
+
+`config.libassert.build_testing`:
+ - expose internal headers required by the `libassert-tests` package.
+   Not intended for normal consumers.

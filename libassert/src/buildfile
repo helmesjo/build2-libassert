@@ -6,6 +6,9 @@ import intf_libs += \
 if ($config.libassert.use_fmt)
   import intf_libs += fmt%lib{fmt}
 
+if ($config.libassert.use_magic_enum)
+  import intf_libs += magic_enum%lib{magic_enum}
+
 # Public headers.
 #
 pub = [dir_path] ../include/
@@ -27,11 +30,14 @@ src_pfx_inc = [dir_path] $src_root/include/
 out_pfx_src = [dir_path] $out_root/src/libassert
 src_pfx_src = [dir_path] $src_root/src/libassert
 
+poptions +=     ($config.libassert.use_fmt        ? -DLIBASSERT_USE_FMT:) \
+                ($config.libassert.use_magic_enum ? -DLIBASSERT_USE_MAGIC_ENUM:) \
+                ($config.libassert.no_std_format  ? -DLIBASSERT_NO_STD_FORMAT:) \
+                ($config.libassert.build_testing  ? -DLIBASSERT_BUILD_TESTING:)
+
 cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
                 "-I$out_pfx_inc" "-I$src_pfx_inc" \
-                ($config.libassert.use_fmt       ? -DLIBASSERT_USE_FMT:) \
-                ($config.libassert.no_std_format ? -DLIBASSERT_NO_STD_FORMAT:) \
-                ($config.libassert.build_testing ? -DLIBASSERT_BUILD_TESTING:)
+                $poptions
 
 obja{**}: cxx.poptions += -DLIBASSERT_STATIC_DEFINE
 objs{**}: cxx.poptions += -Dlibassert_lib_EXPORTS
@@ -41,9 +47,8 @@ objs{**}: cxx.poptions += -Dlibassert_lib_EXPORTS
 lib{assert}:
 {
   cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc" \
-                        ($config.libassert.use_fmt       ? -DLIBASSERT_USE_FMT:) \
-                        ($config.libassert.no_std_format ? -DLIBASSERT_NO_STD_FORMAT:) \
-                        ($config.libassert.build_testing ? -DLIBASSERT_BUILD_TESTING "-I$src_pfx_src" :)
+                        $poptions \
+                        ($config.libassert.build_testing  ? "-I$src_pfx_src" :)
   cxx.export.libs = $intf_libs
 }
 

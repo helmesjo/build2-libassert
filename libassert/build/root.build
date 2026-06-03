@@ -20,9 +20,11 @@ c{*}: extension = c
 #
 test.target = $cxx.target
 
-config [bool] config.libassert.use_fmt       ?= false
-config [bool] config.libassert.no_std_format ?= false
-config [bool] config.libassert.build_testing ?= false
+config [bool] config.libassert.use_fmt        ?= false
+config [bool] config.libassert.use_magic_enum ?= false
+# config [bool] config.libassert.use_enchantum  ?= false # No build2 package available yet.
+config [bool] config.libassert.no_std_format  ?= false
+config [bool] config.libassert.build_testing  ?= false
 
 if($build.mode != 'skeleton' && $config.libassert.build_testing)
   info "configured for testing \(config.libassert.build_testing=true\)"
