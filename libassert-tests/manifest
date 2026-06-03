@@ -1,6 +1,6 @@
 : 1
 name: libassert-tests
-version: 2.2.1-a.0.z
+version: 2.2.1
 type: exe
 language: c++
 summary: The most over-engineered C++ assertion library ; tests
