@@ -1,8 +1,9 @@
 : 1
 name: libassert-tests
-version: 2.2.1
+version: 2.2.1+1
 type: exe
 language: c++
+project: libassert
 summary: The most over-engineered C++ assertion library ; tests
 license: MIT ; MIT License.
 description-file: README.md

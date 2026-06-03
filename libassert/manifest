@@ -1,7 +1,8 @@
 : 1
 name: libassert
-version: 2.2.1
+version: 2.2.1+1
 language: c++
+project: libassert
 summary: The most over-engineered C++ assertion library
 license: MIT ; MIT License.
 description-file: README.md
